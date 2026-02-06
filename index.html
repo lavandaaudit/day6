@@ -64,9 +64,8 @@ h1 { font-size: 16px; margin-bottom: 6px; }
 <div class="card"><div class="label">LOCAL ATOMIC TIME (SIM)</div><div class="value" id="atomicTime">--</div><div class="desc">Базовий еталон часу системи. Використовується як локальна референсна точка.</div></div>
 <div class="card"><div class="label">GPS RELATIVITY OFFSET (SIM)</div><div class="value" id="gpsOffset">--</div><div class="desc">Релятивістська поправка між супутниковим та земним часом.</div></div>
 <div class="card"><div class="label">NETWORK LATENCY</div><div class="value" id="latency">--</div><div class="desc">Проксі швидкості передачі інформації — інформаційний час цивілізації.</div></div>
-<div class="card"><div class="label">37s PHASE CYCLE</div><div class="value" id="cycle">--</div><div class="desc">Мікро-фаза IBONARIUM — умовний квант переходу станів.</div></div>
 <div class="card"><div class="label">TEMPORAL DRIFT (DERIVED)</div><div class="value" id="drift">--</div><div class="desc">Похідне відхилення часових систем між собою.</div></div>
-<div class="card matrixCard"><div class="label">TIME MATRIX STREAM</div><canvas id="matrixCanvas"></canvas><div class="desc">Матриця часу реагує на всі 5 метрик + Time Index (швидкість, щільність, колір).</div></div>
+<div class="card matrixCard"><div class="label">TIME MATRIX STREAM</div><canvas id="matrixCanvas"></canvas><div class="desc">Матриця часу реагує на всі метрики + Time Index (швидкість, щільність, колір).</div></div>
 </div>
 
 <div class="bigIndex"><div class="label">TIME IBONARIUM INDEX</div><div class="indexValue" id="timeIndex">--</div><div class="alertBox" id="alertBox">Очікування даних...</div></div>
@@ -104,20 +103,41 @@ drawStars();
 function updateAtomicTime() { const now = new Date(); document.getElementById("atomicTime").textContent = now.toISOString(); }
 function updateGpsOffset() { const base = 38; const noise = (Math.random()-0.5)*3; const value = base+noise; document.getElementById("gpsOffset").textContent = value.toFixed(3)+" μs"; return value; }
 async function measureLatency() { try { const start = performance.now(); await fetch("https://worldtimeapi.org/api/timezone/Etc/UTC", {cache:"no-store"}); const end = performance.now(); const latency = end-start; document.getElementById("latency").textContent = latency.toFixed(1)+" ms"; return latency; } catch { document.getElementById("latency").textContent="offline"; return 0; } }
-function updateCycle() { const t=Date.now()/1000; const phase=(t%37)/37; document.getElementById("cycle").textContent = phase.toFixed(3); return phase; }
-function calcDrift(gps,latency,cycle){ return Math.abs(gps/40-latency/200)+cycle*0.2; }
-function calcTimeIbonariumIndex(gps,latency,cycle,drift){ return (gps/40)*0.35+(latency/200)*0.25+cycle*0.2+drift*0.2; }
+function calcDrift(gps,latency){ return Math.abs(gps/40-latency/200); }
+function calcTimeIbonariumIndex(gps,latency,drift){ return (gps/40)*0.45+(latency/200)*0.35+drift*0.2; }
 function updateAlert(index){ const box=document.getElementById("alertBox"); if(index<0.4){ box.innerHTML="🟢 СИНХРОНІЯ · Стабільний простір-час"; box.style.borderColor="#00ff9c"; } else if(index<0.7){ box.innerHTML="🟡 ФАЗОВИЙ ЗСУВ · Часові системи розходяться"; box.style.borderColor="#ffaa00"; } else { box.innerHTML="🔴 TEMPORAL TURBULENCE · Ймовірні фазові переходи"; box.style.borderColor="#ff3366"; } }
 
 // ===== MATRIX TIME RAIN =====
 const canvas=document.getElementById("matrixCanvas"); const ctx=canvas.getContext("2d"); let drops=[]; let fontSize=12; let columns; let matrixSpeed=1; let matrixDensity=1; let matrixColor="#00ff9c"; function resizeMatrix(){ canvas.width=canvas.clientWidth; canvas.height=canvas.clientHeight; columns=Math.floor(canvas.width/fontSize); drops=Array(columns).fill(1); } window.addEventListener("resize", resizeMatrix); resizeMatrix(); function updateMatrixFromIndex(index,drift){ matrixSpeed=0.5+index*2; matrixDensity=0.5+drift; if(index<0.4) matrixColor="#00ff9c"; else if(index<0.7) matrixColor="#ffaa00"; else matrixColor="#ff3366"; } function drawMatrix(){ ctx.fillStyle="rgba(0,0,0,0.08)"; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle=matrixColor; ctx.font=fontSize+"px monospace"; for(let i=0;i<drops.length;i++){ if(Math.random()<matrixDensity){ const text=Math.random()>0.5?"1":"0"; ctx.fillText(text,i*fontSize,drops[i]*fontSize); } if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0; drops[i]+=matrixSpeed; } requestAnimationFrame(drawMatrix); } drawMatrix();
 
 // ===== MAIN LOOP =====
-async function mainLoop(){ updateAtomicTime(); const gps=updateGpsOffset(); const latency=await measureLatency(); const cycle=updateCycle(); const drift=calcDrift(gps,latency,cycle); document.getElementById("drift").textContent=drift.toFixed(3); const index=calcTimeIbonariumIndex(gps,latency,cycle,drift); document.getElementById("timeIndex").textContent=index.toFixed(3); updateAlert(index); updateMatrixFromIndex(index,drift); } setInterval(mainLoop,500); mainLoop();
+async function mainLoop(){ 
+    updateAtomicTime(); 
+    const gps=updateGpsOffset(); 
+    const latency=await measureLatency(); 
+    const drift=calcDrift(gps,latency); 
+    document.getElementById("drift").textContent=drift.toFixed(3); 
+    const index=calcTimeIbonariumIndex(gps,latency,drift); 
+    document.getElementById("timeIndex").textContent=index.toFixed(3); 
+    updateAlert(index); 
+    updateMatrixFromIndex(index,drift); 
+} 
+setInterval(mainLoop,500); 
+mainLoop();
 
 // ===== MOBILE ADAPTATION =====
-const mediaQuery = window.matchMedia('(max-width: 500px)'); function handleMobile(e) { if(e.matches){ document.querySelector('.grid').style.gridTemplateColumns='1fr'; canvas.height=140; } else { document.querySelector('.grid').style.gridTemplateColumns='1fr 1fr'; canvas.height=180; } }
-mediaQuery.addEventListener('change', handleMobile); handleMobile(mediaQuery);
+const mediaQuery = window.matchMedia('(max-width: 500px)'); 
+function handleMobile(e) { 
+    if(e.matches){ 
+        document.querySelector('.grid').style.gridTemplateColumns='1fr'; 
+        canvas.height=140; 
+    } else { 
+        document.querySelector('.grid').style.gridTemplateColumns='1fr 1fr'; 
+        canvas.height=180; 
+    } 
+}
+mediaQuery.addEventListener('change', handleMobile); 
+handleMobile(mediaQuery);
 </script>
 
 </body>
