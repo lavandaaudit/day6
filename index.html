@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>IBONARIUM · TIME RELATIVITY REALTIME</title>
+<title>IBONARIUM · TIME TIME</title>
 
 <style>
 body {
@@ -11,7 +11,6 @@ body {
     background: #000;
     color: #00ff9c;
     font-family: monospace;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,17 +28,70 @@ body {
 
 h1 { font-size: 16px; margin-bottom: 6px; }
 .subtitle { font-size: 9px; opacity: 0.6; margin-bottom: 14px; }
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.card { border: 1px solid rgba(0,255,150,0.35); padding: 10px; border-radius: 12px; background: rgba(0,255,150,0.03); backdrop-filter: blur(6px); }
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.card {
+    border: 1px solid rgba(0,255,150,0.35);
+    padding: 10px;
+    border-radius: 12px;
+    background: rgba(0,255,150,0.03);
+    backdrop-filter: blur(6px);
+}
+
 .label { font-size: 9px; opacity: 0.7; }
 .value { font-size: 16px; margin-top: 4px; }
 .desc { font-size: 9px; margin-top: 6px; opacity: 0.65; line-height: 1.3; }
-.matrixCard { position: relative; overflow: hidden; }
-#matrixCanvas { width: 100%; height: 180px; display: block; z-index: 2; position: relative; }
-.bigIndex { margin-top: 14px; border: 1px solid rgba(0,255,200,0.6); border-radius: 16px; padding: 14px; background: rgba(0,255,200,0.04); }
+
+.matrixCard {
+    position: relative;
+    overflow: hidden;
+    height: 180px;
+}
+
+#matrixCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.systemReportCard {
+    margin-top: 10px;
+    border: 1px solid rgba(0,255,150,0.35);
+    border-radius: 12px;
+    padding: 10px;
+    background: rgba(0,255,150,0.03);
+    backdrop-filter: blur(6px);
+    font-size: 9px;
+    line-height: 1.3;
+}
+
+.bigIndex {
+    margin-top: 14px;
+    border: 1px solid rgba(0,255,200,0.6);
+    border-radius: 16px;
+    padding: 14px;
+    background: rgba(0,255,200,0.04);
+}
 .indexValue { font-size: 28px; margin-top: 4px; }
-.alertBox { margin-top: 10px; padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); font-size: 10px; }
-.footer { margin-top: 12px; font-size: 8px; opacity: 0.5; }
+
+.alertBox {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    font-size: 10px;
+}
+
+.footer {
+    margin-top: 12px;
+    font-size: 8px;
+    opacity: 0.5;
+}
 
 #starCanvas {
     position: fixed;
@@ -57,18 +109,52 @@ h1 { font-size: 16px; margin-bottom: 6px; }
 <canvas id="starCanvas"></canvas>
 <div class="container">
 
-<h1>IBONARIUM · REALTIME TIME RELATIVITY MONITOR</h1>
+<h1>IBONARIUM·TIME TIME.MONITOR</h1>
 <div class="subtitle">Realtime оцінка відносності часу через техно, мережеві та релятивістські проксі-метрики</div>
 
 <div class="grid">
-<div class="card"><div class="label">LOCAL ATOMIC TIME (SIM)</div><div class="value" id="atomicTime">--</div><div class="desc">Базовий еталон часу системи. Використовується як локальна референсна точка.</div></div>
-<div class="card"><div class="label">GPS RELATIVITY OFFSET (SIM)</div><div class="value" id="gpsOffset">--</div><div class="desc">Релятивістська поправка між супутниковим та земним часом.</div></div>
-<div class="card"><div class="label">NETWORK LATENCY</div><div class="value" id="latency">--</div><div class="desc">Проксі швидкості передачі інформації — інформаційний час цивілізації.</div></div>
-<div class="card"><div class="label">TEMPORAL DRIFT (DERIVED)</div><div class="value" id="drift">--</div><div class="desc">Похідне відхилення часових систем між собою.</div></div>
-<div class="card matrixCard"><div class="label">TIME MATRIX STREAM</div><canvas id="matrixCanvas"></canvas><div class="desc">Матриця часу реагує на всі метрики + Time Index (швидкість, щільність, колір).</div></div>
+<div class="card">
+  <div class="label">LOCAL ATOMIC TIME (SIM)</div>
+  <div class="value" id="atomicTime">--</div>
+  <div class="desc">Базовий еталон часу системи. Використовується як локальна референсна точка.</div>
+</div>
+<div class="card">
+  <div class="label">GPS RELATIVITY OFFSET (SIM)</div>
+  <div class="value" id="gpsOffset">--</div>
+  <div class="desc">Релятивістська поправка між супутниковим та земним часом.</div>
+</div>
+<div class="card">
+  <div class="label">NETWORK LATENCY</div>
+  <div class="value" id="latency">--</div>
+  <div class="desc">Проксі швидкості передачі інформації — інформаційний час цивілізації.</div>
+</div>
+<div class="card">
+  <div class="label">TEMPORAL DRIFT (DERIVED)</div>
+  <div class="value" id="drift">--</div>
+  <div class="desc">Похідне відхилення часових систем між собою.</div>
 </div>
 
-<div class="bigIndex"><div class="label">TIME IBONARIUM INDEX</div><div class="indexValue" id="timeIndex">--</div><div class="alertBox" id="alertBox">Очікування даних...</div></div>
+<!-- Матриця часу -->
+<div class="matrixCard">
+  <canvas id="matrixCanvas"></canvas>
+</div>
+</div>
+
+<!-- Система звіту як окремий блок -->
+<div class="systemReportCard" id="systemReportText">
+  Поточний стан системи часу IBONARIUM.<br>
+  Метрики синхронізації: атомний час, GPS, латентність мережі.<br>
+  Показник часу: TIME IBONARIUM INDEX.<br>
+  Статус: очікування даних.<br>
+  Оновлення кожні 500 мс.
+</div>
+
+<div class="bigIndex">
+  <div class="label">TIME IBONARIUM INDEX</div>
+  <div class="indexValue" id="timeIndex">--</div>
+  <div class="alertBox" id="alertBox">Очікування даних...</div>
+</div>
+
 <div class="footer">IBONARIUM LAB · UPDATE 500ms · TEMPORAL MATRIX ACTIVE</div>
 </div>
 
@@ -80,7 +166,12 @@ let stars = [];
 function resizeStars() {
     starCanvas.width = window.innerWidth;
     starCanvas.height = window.innerHeight;
-    stars = Array(150).fill().map(() => ({x: Math.random()*starCanvas.width, y: Math.random()*starCanvas.height, z: Math.random()*1.5+0.5, color: `hsl(${Math.random()*360}, 80%, 70%)`}));
+    stars = Array(150).fill().map(() => ({
+        x: Math.random()*starCanvas.width,
+        y: Math.random()*starCanvas.height,
+        z: Math.random()*1.5+0.5,
+        color: `hsl(${Math.random()*360}, 80%, 70%)`
+    }));
 }
 window.addEventListener('resize', resizeStars);
 resizeStars();
@@ -89,7 +180,11 @@ function drawStars() {
     starCtx.fillRect(0,0,starCanvas.width,starCanvas.height);
     stars.forEach(s=>{
         s.y -= 0.2*s.z;
-        if(s.y<0) { s.y=starCanvas.height; s.x=Math.random()*starCanvas.width; s.color=`hsl(${Math.random()*360},80%,70%)`; }
+        if(s.y<0) { 
+            s.y=starCanvas.height; 
+            s.x=Math.random()*starCanvas.width; 
+            s.color=`hsl(${Math.random()*360},80%,70%)`; 
+        }
         starCtx.fillStyle = s.color;
         starCtx.beginPath();
         starCtx.arc(s.x,s.y, s.z*1.5,0,Math.PI*2);
@@ -100,15 +195,93 @@ function drawStars() {
 drawStars();
 
 // ===== METRICS =====
-function updateAtomicTime() { const now = new Date(); document.getElementById("atomicTime").textContent = now.toISOString(); }
-function updateGpsOffset() { const base = 38; const noise = (Math.random()-0.5)*3; const value = base+noise; document.getElementById("gpsOffset").textContent = value.toFixed(3)+" μs"; return value; }
-async function measureLatency() { try { const start = performance.now(); await fetch("https://worldtimeapi.org/api/timezone/Etc/UTC", {cache:"no-store"}); const end = performance.now(); const latency = end-start; document.getElementById("latency").textContent = latency.toFixed(1)+" ms"; return latency; } catch { document.getElementById("latency").textContent="offline"; return 0; } }
+function updateAtomicTime() { 
+    const now = new Date(); 
+    document.getElementById("atomicTime").textContent = now.toISOString(); 
+}
+function updateGpsOffset() { 
+    const base = 38; 
+    const noise = (Math.random()-0.5)*3; 
+    const value = base+noise; 
+    document.getElementById("gpsOffset").textContent = value.toFixed(3)+" μs"; 
+    return value; 
+}
+async function measureLatency() { 
+    try { 
+        const start = performance.now(); 
+        await fetch("https://worldtimeapi.org/api/timezone/Etc/UTC", {cache:"no-store"}); 
+        const end = performance.now(); 
+        const latency = end-start; 
+        document.getElementById("latency").textContent = latency.toFixed(1)+" ms"; 
+        return latency; 
+    } catch { 
+        document.getElementById("latency").textContent="offline"; 
+        return 0; 
+    } 
+}
 function calcDrift(gps,latency){ return Math.abs(gps/40-latency/200); }
 function calcTimeIbonariumIndex(gps,latency,drift){ return (gps/40)*0.45+(latency/200)*0.35+drift*0.2; }
-function updateAlert(index){ const box=document.getElementById("alertBox"); if(index<0.4){ box.innerHTML="🟢 СИНХРОНІЯ · Стабільний простір-час"; box.style.borderColor="#00ff9c"; } else if(index<0.7){ box.innerHTML="🟡 ФАЗОВИЙ ЗСУВ · Часові системи розходяться"; box.style.borderColor="#ffaa00"; } else { box.innerHTML="🔴 TEMPORAL TURBULENCE · Ймовірні фазові переходи"; box.style.borderColor="#ff3366"; } }
+function updateAlert(index){
+    const box=document.getElementById("alertBox"); 
+    const reportText=document.getElementById("systemReportText");
+    if(index<0.4){ 
+        box.innerHTML="🟢 СИНХРОНІЯ · Стабільний простір-час"; 
+        box.style.borderColor="#00ff9c"; 
+        reportText.innerHTML = "Система стабільна.<br>Всі часові метрики в нормі.<br>TIME IBONARIUM INDEX: "+index.toFixed(3);
+    } else if(index<0.7){ 
+        box.innerHTML="🟡 ФАЗОВИЙ ЗСУВ · Часові системи розходяться"; 
+        box.style.borderColor="#ffaa00"; 
+        reportText.innerHTML = "Помітні зсуви між часовими системами.<br>Перевірка мережі та GPS.<br>TIME IBONARIUM INDEX: "+index.toFixed(3);
+    } else { 
+        box.innerHTML="🔴 TEMPORAL TURBULENCE · Ймовірні фазові переходи"; 
+        box.style.borderColor="#ff3366"; 
+        reportText.innerHTML = "Нестабільність простору-часу!<br>Рекомендовано моніторинг та синхронізація.<br>TIME IBONARIUM INDEX: "+index.toFixed(3);
+    } 
+}
 
 // ===== MATRIX TIME RAIN =====
-const canvas=document.getElementById("matrixCanvas"); const ctx=canvas.getContext("2d"); let drops=[]; let fontSize=12; let columns; let matrixSpeed=1; let matrixDensity=1; let matrixColor="#00ff9c"; function resizeMatrix(){ canvas.width=canvas.clientWidth; canvas.height=canvas.clientHeight; columns=Math.floor(canvas.width/fontSize); drops=Array(columns).fill(1); } window.addEventListener("resize", resizeMatrix); resizeMatrix(); function updateMatrixFromIndex(index,drift){ matrixSpeed=0.5+index*2; matrixDensity=0.5+drift; if(index<0.4) matrixColor="#00ff9c"; else if(index<0.7) matrixColor="#ffaa00"; else matrixColor="#ff3366"; } function drawMatrix(){ ctx.fillStyle="rgba(0,0,0,0.08)"; ctx.fillRect(0,0,canvas.width,canvas.height); ctx.fillStyle=matrixColor; ctx.font=fontSize+"px monospace"; for(let i=0;i<drops.length;i++){ if(Math.random()<matrixDensity){ const text=Math.random()>0.5?"1":"0"; ctx.fillText(text,i*fontSize,drops[i]*fontSize); } if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0; drops[i]+=matrixSpeed; } requestAnimationFrame(drawMatrix); } drawMatrix();
+const canvas=document.getElementById("matrixCanvas"); 
+const ctx=canvas.getContext("2d"); 
+let drops=[]; 
+let fontSize=12; 
+let columns; 
+let matrixSpeed=1; 
+let matrixDensity=1; 
+let matrixColor="#00ff9c"; 
+
+function resizeMatrix(){
+    canvas.width=canvas.clientWidth;
+    canvas.height=canvas.clientHeight;
+    columns=Math.floor(canvas.width/fontSize);
+    drops=Array(columns).fill(1);
+}
+window.addEventListener("resize", resizeMatrix); 
+resizeMatrix(); 
+
+function updateMatrixFromIndex(index,drift){
+    matrixSpeed=0.5+index*2;
+    matrixDensity=0.5+drift;
+    if(index<0.4) matrixColor="#00ff9c";
+    else if(index<0.7) matrixColor="#ffaa00";
+    else matrixColor="#ff3366";
+}
+
+function drawMatrix(){
+    ctx.fillStyle="rgba(0,0,0,0.08)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.fillStyle=matrixColor;
+    ctx.font=fontSize+"px monospace";
+    for(let i=0;i<drops.length;i++){
+        if(Math.random()<matrixDensity){
+            const text=Math.random()>0.5?"1":"0";
+            ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+        }
+        if(drops[i]*fontSize>canvas.height && Math.random()>0.975) drops[i]=0;
+        drops[i]+=matrixSpeed;
+    }
+    requestAnimationFrame(drawMatrix);
+}
+drawMatrix();
 
 // ===== MAIN LOOP =====
 async function mainLoop(){ 
