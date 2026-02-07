@@ -60,16 +60,27 @@
         border-radius: 12px;
         background: rgba(0,255,150,0.03);
         backdrop-filter: blur(6px);
+        min-height: 78px;          /* однакова мінімальна висота карток */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .section.right .card {
+        border-color: rgba(180,120,255,0.35);
+        background: rgba(140,80,220,0.03);
     }
     .label { font-size: 9px; opacity: 0.7; }
     .value { font-size: 16px; margin-top: 4px; }
-    .desc  { font-size: 9px; margin-top: 6px; opacity: 0.65; line-height: 1.3; }
+    .desc { font-size: 9px; margin-top: 6px; opacity: 0.65; line-height: 1.3; }
     .matrixCard {
         grid-column: 1 / -1;
-        height: 160px;
+        height: 180px;              /* однакова висота для обох матриць */
         border: 1px solid rgba(0,255,150,0.3);
         border-radius: 12px;
         overflow: hidden;
+    }
+    .section.right .matrixCard {
+        border-color: rgba(180,120,255,0.3);
     }
     .bigIndex {
         margin: 16px 0;
@@ -78,6 +89,10 @@
         border-radius: 16px;
         background: rgba(0,255,200,0.04);
         text-align: center;
+    }
+    .section.right .bigIndex {
+        border-color: rgba(180,120,255,0.6);
+        background: rgba(140,80,220,0.04);
     }
     .indexValue { font-size: 28px; margin: 6px 0; }
     .alertBox {
@@ -101,13 +116,9 @@
         pointer-events: none;
     }
     /* Для правого радара — трохи фіолетові акценти */
-    .section.right .bigIndex {
-        border-color: rgba(180,120,255,0.6);
-        background: rgba(140,80,220,0.04);
-    }
     .section.right .alertBox.high { border-color: #ff4488; }
     .section.right .alertBox.medium { border-color: #ffdd44; }
-    .section.right .alertBox.low  { border-color: #a0ffdd; }
+    .section.right .alertBox.low { border-color: #a0ffdd; }
 
     @media (max-width: 900px) {
         .main-wrapper {
@@ -125,9 +136,7 @@
 </style>
 </head>
 <body>
-
 <canvas id="starCanvas" class="starCanvas"></canvas>
-
 <div class="main-wrapper">
 
     <!-- ЛІВИЙ РАДАР: TIME TIME MONITOR -->
@@ -135,7 +144,6 @@
         <div class="container">
             <h1>IBONARIUM · TIME TIME MONITOR</h1>
             <div class="subtitle">Realtime оцінка відносності часу</div>
-
             <div class="grid">
                 <div class="card">
                     <div class="label">LOCAL ATOMIC TIME</div>
@@ -161,13 +169,11 @@
                     <canvas id="matrixTime"></canvas>
                 </div>
             </div>
-
             <div class="bigIndex">
                 <div class="label">TIME IBONARIUM INDEX</div>
                 <div class="indexValue" id="timeIndex">--</div>
                 <div class="alertBox" id="timeAlert">Очікування даних...</div>
             </div>
-
             <div class="footer">UPDATE 500ms · TEMPORAL MATRIX ACTIVE</div>
         </div>
     </div>
@@ -177,7 +183,6 @@
         <div class="container">
             <h1>IBONARIUM · UNCERTAINTY RADAR</h1>
             <div class="subtitle">Квантова ентропія · Глобальна когерентність</div>
-
             <div class="grid">
                 <div class="card">
                     <div class="label">QUANTUM ENTROPY (ANU)</div>
@@ -203,13 +208,11 @@
                     <canvas id="matrixUncertainty"></canvas>
                 </div>
             </div>
-
             <div class="bigIndex">
                 <div class="label">UNCERTAINTY IBONARIUM INDEX</div>
                 <div class="indexValue" id="mainUncertaintyIndex">--</div>
                 <div class="alertBox" id="uncertaintyAlert">Завантаження даних...</div>
             </div>
-
             <div class="footer">ANU QRNG · GCP · ~60s update</div>
         </div>
     </div>
@@ -218,12 +221,11 @@
 
 <script>
 // ================================================
-//                СПІЛЬНИЙ ФОН ЗІРОК
+// СПІЛЬНИЙ ФОН ЗІРОК
 // ================================================
 const starCanvas = document.getElementById('starCanvas');
 const starCtx = starCanvas.getContext('2d');
 let stars = [];
-
 function resizeStars() {
     starCanvas.width = window.innerWidth;
     starCanvas.height = window.innerHeight;
@@ -236,7 +238,6 @@ function resizeStars() {
 }
 window.addEventListener('resize', resizeStars);
 resizeStars();
-
 function drawStars() {
     starCtx.fillStyle = 'rgba(0,0,0,0.7)';
     starCtx.fillRect(0,0,starCanvas.width,starCanvas.height);
@@ -256,15 +257,15 @@ function drawStars() {
 drawStars();
 
 // ================================================
-//               TIME MONITOR (лівий)
+// TIME MONITOR (лівий)
 // ================================================
 const timeMatrixCanvas = document.getElementById("matrixTime");
 const timeCtx = timeMatrixCanvas.getContext("2d");
 let timeDrops = [];
-let timeFontSize = 12;
+const timeFontSize = 12;
 let timeColumns;
 let timeMatrixSpeed = 1;
-let timeMatrixDensity = 1;
+let timeMatrixDensity = 0.7;
 let timeMatrixColor = "#00ff9c";
 
 function resizeTimeMatrix() {
@@ -302,14 +303,14 @@ function drawTimeMatrix() {
 drawTimeMatrix();
 
 // ================================================
-//             UNCERTAINTY RADAR (правий)
+// UNCERTAINTY RADAR (правий)
 // ================================================
 const uncMatrixCanvas = document.getElementById("matrixUncertainty");
 const uncCtx = uncMatrixCanvas.getContext("2d");
 let uncDrops = [];
-let uncFontSize = 13;
+const uncFontSize = 12;                     // однаковий розмір шрифту
 let uncColumns;
-let uncMatrixSpeed = 1.4;
+let uncMatrixSpeed = 1;
 let uncMatrixDensity = 0.7;
 let uncMatrixColor = "#9933ff";
 
@@ -348,10 +349,10 @@ function drawUncMatrix() {
 drawUncMatrix();
 
 // ================================================
-//                    ЛОГІКА TIME (лівий)
+// ЛОГІКА TIME (лівий)
 // ================================================
 function updateAtomicTime() {
-    document.getElementById("atomicTime").textContent = new Date().toISOString();
+    document.getElementById("atomicTime").textContent = new Date().toISOString().replace("T", " ").substr(0,19);
 }
 
 function updateGpsOffset() {
@@ -411,7 +412,7 @@ async function timeMainLoop() {
 }
 
 // ================================================
-//                ЛОГІКА UNCERTAINTY (правий)
+// ЛОГІКА UNCERTAINTY (правий)
 // ================================================
 async function fetchAnuEntropy() {
     try {
@@ -470,7 +471,7 @@ async function updateUncertainty() {
 }
 
 // ================================================
-//                    ЗАПУСК
+// ЗАПУСК
 // ================================================
 setInterval(timeMainLoop, 500);
 timeMainLoop();
@@ -478,17 +479,9 @@ timeMainLoop();
 setInterval(updateUncertainty, 60000);
 updateUncertainty();
 
-// Мобільна адаптація
-const mediaQuery = window.matchMedia('(max-width: 900px)');
-function handleMobile(e) {
-    // на мобілках просто вертикально, як було раніше
-}
-mediaQuery.addEventListener('change', handleMobile);
-handleMobile(mediaQuery);
-
+// Початковий запуск матриць
 drawTimeMatrix();
 drawUncMatrix();
-
 </script>
 </body>
 </html>
